@@ -14,7 +14,7 @@ namespace SuperHot {
 	using namespace System::Collections::Generic;
 
 	/// <summary>
-	/// GameForm ªººK­n
+	/// GameForm çš„æ‘˜è¦
 	/// </summary>
 	public ref class GameForm : public System::Windows::Forms::Form
 	{
@@ -23,7 +23,7 @@ namespace SuperHot {
 		{
 			InitializeComponent();
 			//
-			//TODO:  ¦b¦¹¥[¤J«Øºc¨ç¦¡µ{¦¡½X
+			//TODO:  åœ¨æ­¤åŠ å…¥å»ºæ§‹å‡½å¼ç¨‹å¼ç¢¼
 			//
 			playerHeight = Player_image->Height;
 			playerWidth = Player_image->Width;
@@ -32,7 +32,7 @@ namespace SuperHot {
 
 	protected:
 		/// <summary>
-		/// ²M°£¥ô¦ó¨Ï¥Î¤¤ªº¸ê·½¡C
+		/// æ¸…é™¤ä»»ä½•ä½¿ç”¨ä¸­çš„è³‡æºã€‚
 		/// </summary>
 		~GameForm()
 		{
@@ -53,14 +53,14 @@ namespace SuperHot {
 
 	private:
 		/// <summary>
-		/// ³]­p¤u¨ã©Ò»İªºÅÜ¼Æ¡C
+		/// è¨­è¨ˆå·¥å…·æ‰€éœ€çš„è®Šæ•¸ã€‚
 		/// </summary>
 
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
-		/// ¦¹¬°³]­p¤u¨ã¤ä´©©Ò»İªº¤èªk - ½Ğ¤Å¨Ï¥Îµ{¦¡½X½s¿è¾¹­×§ï
-		/// ³o­Ó¤èªkªº¤º®e¡C
+		/// æ­¤ç‚ºè¨­è¨ˆå·¥å…·æ”¯æ´æ‰€éœ€çš„æ–¹æ³• - è«‹å‹¿ä½¿ç”¨ç¨‹å¼ç¢¼ç·¨è¼¯å™¨ä¿®æ”¹
+		/// é€™å€‹æ–¹æ³•çš„å…§å®¹ã€‚
 		/// </summary>
 		void InitializeComponent(void)
 		{
@@ -109,25 +109,25 @@ namespace SuperHot {
 			// 
 			this->Score->AutoSize = true;
 			this->Score->BackColor = System::Drawing::Color::White;
-			this->Score->Font = (gcnew System::Drawing::Font(L"·s²Ó©úÅé", 13.875F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->Score->Font = (gcnew System::Drawing::Font(L"æ–°ç´°æ˜é«”", 13.875F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
 			this->Score->Location = System::Drawing::Point(50, 39);
 			this->Score->Name = L"Score";
 			this->Score->Size = System::Drawing::Size(138, 37);
 			this->Score->TabIndex = 4;
-			this->Score->Text = L"±o¤À:  0";
+			this->Score->Text = L"å¾—åˆ†:  0";
 			// 
 			// Amo_count
 			// 
 			this->Amo_count->AutoSize = true;
 			this->Amo_count->BackColor = System::Drawing::Color::White;
-			this->Amo_count->Font = (gcnew System::Drawing::Font(L"·s²Ó©úÅé", 13.875F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->Amo_count->Font = (gcnew System::Drawing::Font(L"æ–°ç´°æ˜é«”", 13.875F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
 			this->Amo_count->Location = System::Drawing::Point(50, 108);
 			this->Amo_count->Name = L"Amo_count";
 			this->Amo_count->Size = System::Drawing::Size(246, 37);
 			this->Amo_count->TabIndex = 5;
-			this->Amo_count->Text = L"¤l¼u¼Æ¶q:  100";
+			this->Amo_count->Text = L"å­å½ˆæ•¸é‡:  100";
 			// 
 			// imageList1
 			// 
@@ -163,7 +163,7 @@ namespace SuperHot {
 			this->DoubleBuffered = true;
 			this->Name = L"GameForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"¼ö®ö : Super Hot";
+			this->Text = L"ç†±æµª : Super Hot";
 			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &GameForm::GameForm_KeyDown);
 			this->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &GameForm::GameForm_KeyUp);
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &GameForm::GameForm_MouseDown);
@@ -179,22 +179,22 @@ namespace SuperHot {
 		Boolean goright;
 		Boolean goup;
 		Boolean godown;
-		int playerSpeed = 13;	//¤ô¥­²¾°Ê³t«×
-		int playerSpeedSlow = 10;//±×¦V²¾°Ê³t«×
-		int enemySpeed = 5;		//¼Ä¤H²¾°Ê³t«×
-		int mouseX;				//·Æ¹«x®y¼Ğ¦ì¸m
-		int mouseY;				//·Æ¹«y®y¼Ğ¦ì¸m
-		int playerFacing = 0;	//­±¦V¥_¤è(0)
-		int playerX;			//ª±®a¦bx®y¼Ğ¦ì¸m
-		int playerY;			//ª±®a¦by®y¼Ğ¦ì¸m
-		int playerHeight;		//ª±®a¹Ï¹³°ª«×
-		int playerWidth;		//ª±®a¹Ï¹³¼e«×
-		int amo = 100;			//¤l¼u¼Æ
-		int score = 0;			//±o¤À
-		int enemy_count = 0;	//¼Ä¤H¼Æ¶q
+		int playerSpeed = 13;	//æ°´å¹³ç§»å‹•é€Ÿåº¦
+		int playerSpeedSlow = 10;//æ–œå‘ç§»å‹•é€Ÿåº¦
+		int enemySpeed = 5;		//æ•µäººç§»å‹•é€Ÿåº¦
+		int mouseX;				//æ»‘é¼ xåº§æ¨™ä½ç½®
+		int mouseY;				//æ»‘é¼ yåº§æ¨™ä½ç½®
+		int playerFacing = 0;	//é¢å‘åŒ—æ–¹(0)
+		int playerX;			//ç©å®¶åœ¨xåº§æ¨™ä½ç½®
+		int playerY;			//ç©å®¶åœ¨yåº§æ¨™ä½ç½®
+		int playerHeight;		//ç©å®¶åœ–åƒé«˜åº¦
+		int playerWidth;		//ç©å®¶åœ–åƒå¯¬åº¦
+		int amo = 100;			//å­å½ˆæ•¸
+		int score = 0;			//å¾—åˆ†
+		int enemy_count = 0;	//æ•µäººæ•¸é‡
 		List<bullet^>^ bulletList = gcnew List<bullet^>;
 
-	//«öÁä:¤W¤U¥ª¥k
+	//æŒ‰éµ:ä¸Šä¸‹å·¦å³
 	private: System::Void GameForm_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 		if (e->KeyCode == Keys::A) {
 			goleft = true;
@@ -206,7 +206,7 @@ namespace SuperHot {
 		if (e->KeyCode == Keys::S)
 			godown = true;
 	}
-	//©ñ¶}«öÁä:¤W¤U¥ª¥k¡AªÅ¥ÕÁä®gÀ»
+	//æ”¾é–‹æŒ‰éµ:ä¸Šä¸‹å·¦å³ï¼Œç©ºç™½éµå°„æ“Š
 	private: System::Void GameForm_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 		if (e->KeyCode == Keys::A) {
 			goleft = false;
@@ -221,30 +221,30 @@ namespace SuperHot {
 			amo--;
 			shoot(playerFacing, this);
 		}
-		Amo_count->Text = "¤l¼u¼Æ¶q:" + amo;
+		Amo_count->Text = "å­å½ˆæ•¸é‡:" + amo;
 	}
 
-	//¨¤¦â²¾°Êªºtimer
+	//è§’è‰²ç§»å‹•çš„timer
 	private: System::Void timer_movement_Tick(System::Object^  sender, System::EventArgs^  e) {
 		playerX = Player_image->Location.X;
 		playerY = Player_image->Location.Y;
-		//¤£°Ê®É¡ASLOW MOTIONºC°Ê§@¼Ò¦¡
+		//ä¸å‹•æ™‚ï¼ŒSLOW MOTIONæ…¢å‹•ä½œæ¨¡å¼
 		if (goleft == false && goright == false && goup == false && godown == false) {
 			enemySpeed = 1;
 			for each (bullet^ each_bullet in bulletList){
-				each_bullet->speed = 3;
-				each_bullet->speedSlow = 1;
+				each_bullet->dx = each_bullet->slowSpeedX;
+				each_bullet->dy = each_bullet->slowSpeedY;
 			}
 		}
 		else {
 			enemySpeed = 5;
 			for each (bullet^ each_bullet in bulletList) {
-				each_bullet->speed = 20;
-				each_bullet->speedSlow = 18;
+				each_bullet->dx = each_bullet->normalSpeedX;
+				each_bullet->dy = each_bullet->normalSpeedY;
 			}
 		}
 
-		//¤W¤U¥ª¥k
+		//ä¸Šä¸‹å·¦å³
 		if (goleft == true && Player_image->Location.X > 15) {
 			Player_image->Location = Point(playerX - playerSpeed, playerY);
 		}
@@ -258,7 +258,7 @@ namespace SuperHot {
 			Player_image->Location = Point(playerX, playerY + playerSpeed);
 		}
 
-		//±×¤è¦V²¾°Ê
+		//æ–œæ–¹å‘ç§»å‹•
 		if (goup == true && goleft == true && Player_image->Location.X > 10 && Player_image->Location.Y > 10) {
 			Player_image->Location = Point(playerX - playerSpeedSlow, playerY - playerSpeedSlow);
 		}
@@ -272,90 +272,91 @@ namespace SuperHot {
 			Player_image->Location = Point(playerX + playerSpeedSlow , playerY + playerSpeedSlow);
 		}
 
-		//§ïÅÜ¨¤¦â¹Ï¹³¡A¦@¤K­Ó¤è¦ì¡A¥ÎimageListÀx¦s8±i¹Ï¤ù
+		//æ”¹è®Šè§’è‰²åœ–åƒï¼Œå…±å…«å€‹æ–¹ä½ï¼Œç”¨imageListå„²å­˜8å¼µåœ–ç‰‡
 		float slope = 100.0;
 		if (mouseX != playerX)
 			slope = (float)(mouseY - playerY - 0.5* playerHeight) / (float)(mouseX - playerX - 0.5* playerWidth);
 		
 		if (slope < -2.5 && mouseY < playerY + 0.5* playerHeight) {
-			Player_image->BackgroundImage = imageList1->Images[0];	//¥¿¤W¤è
+			Player_image->BackgroundImage = imageList1->Images[0];	//æ­£ä¸Šæ–¹
 			playerFacing = 0;
 		}
 		else if (slope < -0.3 && slope > -2.5 && mouseX > playerX + 0.5* playerWidth) {
-			Player_image->BackgroundImage = imageList1->Images[1];	//¥k¤W¤è
+			Player_image->BackgroundImage = imageList1->Images[1];	//å³ä¸Šæ–¹
 			playerFacing = 1;
 		}
 		else if (slope < 0.3 && slope > -0.3 && mouseX > playerX + 0.5* playerWidth) {
-			Player_image->BackgroundImage = imageList1->Images[2];	//¥¿¥k¤è
+			Player_image->BackgroundImage = imageList1->Images[2];	//æ­£å³æ–¹
 			playerFacing = 2;
 		}
 		else if (slope < 2.5 && slope > 0.3 && mouseX > playerX + 0.5* playerWidth) {
-			Player_image->BackgroundImage = imageList1->Images[3];	//¥k¤U¤è
+			Player_image->BackgroundImage = imageList1->Images[3];	//å³ä¸‹æ–¹
 			playerFacing = 3;
 		}
 		else if (slope > 2.5 &&  mouseY > playerY + 0.5* playerHeight) {
-			Player_image->BackgroundImage = imageList1->Images[4];	//¥¿¤U¤è
+			Player_image->BackgroundImage = imageList1->Images[4];	//æ­£ä¸‹æ–¹
 			playerFacing = 4;
 		}
 		else if (slope < -0.3 && slope > -2.5 &&  mouseY > playerY + 0.5* playerHeight) {
-			Player_image->BackgroundImage = imageList1->Images[5];	//¥ª¤U¤è
+			Player_image->BackgroundImage = imageList1->Images[5];	//å·¦ä¸‹æ–¹
 			playerFacing = 5;
 		}
 		else if (slope < 0.3 && slope > -0.3 && mouseX < playerX + 0.5* playerWidth) {
-			Player_image->BackgroundImage = imageList1->Images[6];	//¥¿¥ª¤è
+			Player_image->BackgroundImage = imageList1->Images[6];	//æ­£å·¦æ–¹
 			playerFacing = 6;
 		}
 		else if (slope < 2.5 && slope > 0.3 && mouseX < playerX + 0.5* playerWidth) {
-			Player_image->BackgroundImage = imageList1->Images[7];	//¥ª¤W¤è
+			Player_image->BackgroundImage = imageList1->Images[7];	//å·¦ä¸Šæ–¹
 			playerFacing = 7;
 		}
 	}
 
-	//°»´ú·Æ¹«ªº¦ì¸m
+	//åµæ¸¬æ»‘é¼ çš„ä½ç½®
 	private: System::Void GameForm_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 		mouseX = e->Location.X;
 		mouseY = e->Location.Y;
 	}
 
-	//«ö¤U·Æ¹«¥ªÁä¡Aµo®g¤l¼u
+	//æŒ‰ä¸‹æ»‘é¼ å·¦éµï¼Œç™¼å°„å­å½ˆ
 	private: System::Void GameForm_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 		if (amo > 0) {
 			amo--;
 			shoot(playerFacing, this);
 		}
-		Amo_count->Text = "¤l¼u¼Æ¶q: " + amo;
+		Amo_count->Text = "å­å½ˆæ•¸é‡: " + amo;
 	}
-	//µo®g¤l¼u
+	//ç™¼å°„å­å½ˆ
 	private: System::Void shoot(int facing, Form^ form) {
 		bullet^ one_bullet = gcnew bullet;
-		one_bullet->direction = facing;
 		one_bullet->bullet_left = playerX + 0.5*playerWidth;
 		one_bullet->bullet_top = playerY + 0.5*playerHeight;
+		one_bullet->directionX = mouseX;
+		one_bullet->directionY = mouseY;
 		one_bullet->make_bullet(form);
 		bulletList->Add(one_bullet);
 	}
-	//¼Ä¤H²¾°Ê
+	//æ•µäººç§»å‹•
 	private: System::Void timer_enemy_Tick(System::Object^  sender, System::EventArgs^  e) {
 		for each (Control^ x in this->Controls) {
-			//¦pªG¼Ä¤H©M¤l¼u±µÄ²
+			//å¦‚æœæ•µäººå’Œå­å½ˆæ¥è§¸
 			for each (Control^ y in this->Controls) {
 				if (y->Tag == "Bullet" && x->Tag == "Enemy") {
 					if (x->Bounds.IntersectsWith(y->Bounds)) {
-						delete y;	//¤l¼u®ø¥¢
-						delete x;	//¼Ä¤H®ø¥¢
+						delete y;	//å­å½ˆæ¶ˆå¤±
+						delete x;	//æ•µäººæ¶ˆå¤±
 						score += 10;
-						Score->Text = "±o¤À: " + score;
+						Score->Text = "å¾—åˆ†: " + score;
 						enemy_count--;
 					}
 				}
 			}
-			//¼Ä¤H²¾°Ê
+			//æ•µäººç§»å‹•
 			if (x->Tag == "Enemy") {
-				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {	//¼²¤Wª±®a
+				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {	//æ’ä¸Šç©å®¶
 					score -= 5;
-					Score->Text = "±o¤À: " + score;
+					Score->Text = "å¾—åˆ†: " + score;
 				}
-				//´Â¦V¨¤¦â²¾°Ê
+				//æœå‘è§’è‰²ç§»å‹•
 				if (x->Left > playerX) {
 					x->Location = Point(x->Left - enemySpeed, x->Top);
 				}
@@ -370,13 +371,14 @@ namespace SuperHot {
 				}
 			}
 		}
-		//¼Ä¤HÀH¾÷²£¥Í
+		//æ•µäººéš¨æ©Ÿç”¢ç”Ÿ
 		if((rand() % 400) % 40 == 0) {
 			if(enemy_count < 5)
 				make_enemy();
 		}
+		
 	}
-	//¼Ä¤H­«¥Í
+	//æ•µäººé‡ç”Ÿ
 	private: System::Void make_enemy() {
 		enemy_count++;
 		System::Windows::Forms::PictureBox^ enemies = gcnew  System::Windows::Forms::PictureBox;
@@ -384,20 +386,20 @@ namespace SuperHot {
 		enemies->Size = System::Drawing::Size(50, 50);
 		enemies->BackColor = System::Drawing::Color::Firebrick;
 		enemies->TabStop = false;
-		//ÀH¾÷­«¥ÍÂI¡A¦bµøµ¡¥~®Ø
+		//éš¨æ©Ÿé‡ç”Ÿé»ï¼Œåœ¨è¦–çª—å¤–æ¡†
 		switch (rand()%4)
 		{
 		case 0:
-			enemies->Location = System::Drawing::Point(rand() % 1000, 0);	//¤W¤è
+			enemies->Location = System::Drawing::Point(rand() % 1000, 0);	//ä¸Šæ–¹
 			break;
 		case 1:
-			enemies->Location = System::Drawing::Point(rand() % 1000, 600);	//¤U¤è
+			enemies->Location = System::Drawing::Point(rand() % 1000, 600);	//ä¸‹æ–¹
 			break;
 		case 2:
-			enemies->Location = System::Drawing::Point(0, rand() % 600);	//¥ª¤è
+			enemies->Location = System::Drawing::Point(0, rand() % 600);	//å·¦æ–¹
 			break;
 		case 3:
-			enemies->Location = System::Drawing::Point(1000, rand() % 600);	//¥k¤è
+			enemies->Location = System::Drawing::Point(1000, rand() % 600);	//å³æ–¹
 			break;
 		default:
 			break;

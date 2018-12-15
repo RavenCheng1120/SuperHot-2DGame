@@ -11,7 +11,7 @@ namespace SuperHot {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// StartForm ªººK­n
+	/// StartForm çš„æ‘˜è¦
 	/// </summary>
 	public ref class StartForm : public System::Windows::Forms::Form
 	{
@@ -20,13 +20,13 @@ namespace SuperHot {
 		{
 			InitializeComponent();
 			//
-			//TODO:  ¦b¦¹¥[¤J«Øºc¨ç¦¡µ{¦¡½X
+			//TODO:  åœ¨æ­¤åŠ å…¥å»ºæ§‹å‡½å¼ç¨‹å¼ç¢¼
 			//
 		}
 
 	protected:
 		/// <summary>
-		/// ²M°£¥ô¦ó¨Ï¥Î¤¤ªº¸ê·½¡C
+		/// æ¸…é™¤ä»»ä½•ä½¿ç”¨ä¸­çš„è³‡æºã€‚
 		/// </summary>
 		~StartForm()
 		{
@@ -41,17 +41,18 @@ namespace SuperHot {
 
 	private:
 		/// <summary>
-		/// ³]­p¤u¨ã©Ò»İªºÅÜ¼Æ¡C
+		/// è¨­è¨ˆå·¥å…·æ‰€éœ€çš„è®Šæ•¸ã€‚
 		/// </summary>
 		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
-		/// ¦¹¬°³]­p¤u¨ã¤ä´©©Ò»İªº¤èªk - ½Ğ¤Å¨Ï¥Îµ{¦¡½X½s¿è¾¹­×§ï
-		/// ³o­Ó¤èªkªº¤º®e¡C
+		/// æ­¤ç‚ºè¨­è¨ˆå·¥å…·æ”¯æ´æ‰€éœ€çš„æ–¹æ³• - è«‹å‹¿ä½¿ç”¨ç¨‹å¼ç¢¼ç·¨è¼¯å™¨ä¿®æ”¹
+		/// é€™å€‹æ–¹æ³•çš„å…§å®¹ã€‚
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(StartForm::typeid));
 			this->button_newGame = (gcnew System::Windows::Forms::Button());
 			this->button_setting = (gcnew System::Windows::Forms::Button());
 			this->label_corner = (gcnew System::Windows::Forms::Label());
@@ -65,7 +66,7 @@ namespace SuperHot {
 			this->button_newGame->Font = (gcnew System::Drawing::Font(L"Bahnschrift", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button_newGame->ForeColor = System::Drawing::SystemColors::InactiveCaptionText;
-			this->button_newGame->Location = System::Drawing::Point(242, 369);
+			this->button_newGame->Location = System::Drawing::Point(234, 749);
 			this->button_newGame->Name = L"button_newGame";
 			this->button_newGame->Size = System::Drawing::Size(233, 108);
 			this->button_newGame->TabIndex = 1;
@@ -81,7 +82,7 @@ namespace SuperHot {
 			this->button_setting->Font = (gcnew System::Drawing::Font(L"Bahnschrift", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button_setting->ForeColor = System::Drawing::SystemColors::InactiveCaptionText;
-			this->button_setting->Location = System::Drawing::Point(242, 603);
+			this->button_setting->Location = System::Drawing::Point(628, 749);
 			this->button_setting->Name = L"button_setting";
 			this->button_setting->Size = System::Drawing::Size(233, 108);
 			this->button_setting->TabIndex = 2;
@@ -91,10 +92,11 @@ namespace SuperHot {
 			// label_corner
 			// 
 			this->label_corner->AutoSize = true;
+			this->label_corner->BackColor = System::Drawing::Color::Transparent;
 			this->label_corner->Font = (gcnew System::Drawing::Font(L"Bahnschrift", 10.125F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label_corner->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
-			this->label_corner->Location = System::Drawing::Point(1408, 935);
+			this->label_corner->Location = System::Drawing::Point(1409, 935);
 			this->label_corner->Name = L"label_corner";
 			this->label_corner->Size = System::Drawing::Size(154, 33);
 			this->label_corner->TabIndex = 5;
@@ -107,13 +109,16 @@ namespace SuperHot {
 			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->ClientSize = System::Drawing::Size(1573, 977);
 			this->Controls->Add(this->label_corner);
 			this->Controls->Add(this->button_setting);
 			this->Controls->Add(this->button_newGame);
+			this->DoubleBuffered = true;
 			this->Name = L"StartForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			this->Text = L"¼ö®ö : Super Hot";
+			this->Text = L"ç†±æµª : Super Hot";
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

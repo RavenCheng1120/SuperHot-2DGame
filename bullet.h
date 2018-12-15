@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -11,16 +12,22 @@ using namespace System::Windows::Forms;
 namespace SuperHot {
 
 	/// <summary>
-	/// bullet ªººK­n
+	/// bullet çš„æ‘˜è¦
 	/// </summary>
 	public ref class bullet :  public System::ComponentModel::Component
 	{
 
-	public: int direction;		//¤l¼u«e¶i¤è¦V
-			int speed = 20;		//¤l¼u³t«×
-			int speedSlow = 18;	//±×¦V¤l¼u³t«×
-			int bullet_left;	//¤l¼ux¶b¦ì¸m
-			int bullet_top;		//¤l¼uy¶b¦ì¸m
+	public: int directionX;		//å­å½ˆå‰é€²æ–¹å‘
+			int directionY;		//å­å½ˆå‰é€²æ–¹å‘
+			float vectorLength;	//å­å½ˆç§»å‹•normalizeå€¼
+			float dx;			//å­å½ˆç§»å‹•æ•¸å€¼
+			float dy;			//å­å½ˆç§»å‹•æ•¸å€¼
+			int slowSpeedX;
+			int slowSpeedY;
+			int normalSpeedX;
+			int normalSpeedY;
+			int bullet_left;	//å­å½ˆxè»¸ä½ç½®
+			int bullet_top;		//å­å½ˆyè»¸ä½ç½®
 			System::Windows::Forms::PictureBox^ Bullet = gcnew System::Windows::Forms::PictureBox;
 			System::Windows::Forms::Timer^ bullet_timer = gcnew System::Windows::Forms::Timer;
 
@@ -29,13 +36,13 @@ namespace SuperHot {
 		{
 			InitializeComponent();
 			//
-			//TODO:  ¦b¦¹¥[¤J«Øºc¨ç¦¡µ{¦¡½X
+			//TODO:  åœ¨æ­¤åŠ å…¥å»ºæ§‹å‡½å¼ç¨‹å¼ç¢¼
 			//
 		}
 		bullet(System::ComponentModel::IContainer ^container)
 		{
 			/// <summary>
-			/// Windows.Forms Ãş§O²Õ¦X³]­p¤u¨ã¤ä´©©Ò»İªºµ{¦¡½X
+			/// Windows.Forms é¡åˆ¥çµ„åˆè¨­è¨ˆå·¥å…·æ”¯æ´æ‰€éœ€çš„ç¨‹å¼ç¢¼
 			/// </summary>
 
 			container->Add(this);
@@ -44,7 +51,7 @@ namespace SuperHot {
 
 	protected:
 		/// <summary>
-		/// ²M°£¥ô¦ó¨Ï¥Î¤¤ªº¸ê·½¡C
+		/// æ¸…é™¤ä»»ä½•ä½¿ç”¨ä¸­çš„è³‡æºã€‚
 		/// </summary>
 		~bullet()
 		{
@@ -56,21 +63,21 @@ namespace SuperHot {
 
 	private:
 		/// <summary>
-		/// ³]­p¤u¨ã©Ò»İªºÅÜ¼Æ¡C
+		/// è¨­è¨ˆå·¥å…·æ‰€éœ€çš„è®Šæ•¸ã€‚
 		/// </summary>
 		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
-		/// ¦¹¬°³]­p¤u¨ã¤ä´©©Ò»İªº¤èªk - ½Ğ¤Å¨Ï¥Îµ{¦¡½X½s¿è¾¹­×§ï
-		/// ³o­Ó¤èªkªº¤º®e¡C
+		/// æ­¤ç‚ºè¨­è¨ˆå·¥å…·æ”¯æ´æ‰€éœ€çš„æ–¹æ³• - è«‹å‹¿ä½¿ç”¨ç¨‹å¼ç¢¼ç·¨è¼¯å™¨ä¿®æ”¹
+		/// é€™å€‹æ–¹æ³•çš„å…§å®¹ã€‚
 		/// </summary>
 		void InitializeComponent(void)
 		{
 			components = gcnew System::ComponentModel::Container();
 		}
 #pragma endregion
-	//³]©w¦n¤l¼uªºpictureBox¸òtimer
+	//è¨­å®šå¥½å­å½ˆçš„pictureBoxè·Ÿtimer
 	public: System::Void make_bullet(Form^ form) {
 		Bullet->BackColor = System::Drawing::Color::White;
 		Bullet->Name = L"picture_bullet";
@@ -80,45 +87,31 @@ namespace SuperHot {
 		Bullet->BringToFront();
 		Bullet->Tag = "Bullet";
 		form->Controls->Add(Bullet);
-		
+
+		directionX = directionX - bullet_left;
+		directionY = directionY - bullet_top;
+		vectorLength = sqrt(directionX* directionX + directionY* directionY);
+		dx = directionX / vectorLength;
+		dy = directionY / vectorLength;
+		slowSpeedX = dx * 5;
+		slowSpeedY = dy * 5;
+		dx = dx * 20;
+		dy = dy * 20;
+		normalSpeedX = dx;
+		normalSpeedY = dy;
+
 		bullet_timer->Enabled = true;
-		bullet_timer->Interval = speed*0.8;
+		bullet_timer->Interval = 16;
 		bullet_timer->Tick += gcnew System::EventHandler(this, &bullet::tm_tick);
 		bullet_timer->Start();
 	}
 
-	//¨CÁû¤l¼u³£·|²£¥Í¤@­Ótimer¡AÅı¤l¼uÀHµÛ®É¶¡²¾°Ê
+	//æ¯é¡†å­å½ˆéƒ½æœƒç”¢ç”Ÿä¸€å€‹timerï¼Œè®“å­å½ˆéš¨è‘—æ™‚é–“ç§»å‹•
 	public: System::Void tm_tick(System::Object^  sender, System::EventArgs^  e) {
-		if (direction == 0) {
-			bullet_top -= speed;
-		}
-		if (direction == 1) {
-			bullet_top -= speedSlow;
-			bullet_left += speedSlow;
-		}
-		if (direction == 2) {
-			bullet_left += speed;
-		}
-		if (direction == 3) {
-			bullet_top += speedSlow;
-			bullet_left += speedSlow;
-		}
-		if (direction == 4) {
-			bullet_top += speed;
-		}
-		if (direction == 5) {
-			bullet_top += speedSlow;
-			bullet_left -= speedSlow;
-		}
-		if (direction == 6) {
-			bullet_left -= speed;
-		}
-		if (direction == 7) {
-			bullet_top -= speedSlow;
-			bullet_left -= speedSlow;
-		}
-		Bullet->Location = Point(bullet_left, bullet_top);	//§ó·s¤l¼u¦ì¸m
-		//¸I¨ìÃä¬É´N®ø¥¢
+		bullet_left += dx;
+		bullet_top += dy;
+		Bullet->Location = Point(bullet_left, bullet_top);	//æ›´æ–°å­å½ˆä½ç½®
+		//ç¢°åˆ°é‚Šç•Œå°±æ¶ˆå¤±
 		if (bullet_left < 5 || bullet_left > 1025 || bullet_top < 5 || bullet_top > 640) {
 			bullet_timer->Stop();
 			delete bullet_timer;

@@ -1,5 +1,6 @@
 #pragma once
 #include "bullet.h"
+#include "enemyBullet.h"
 #include <cstdlib>
 #include <time.h>
 
@@ -145,7 +146,7 @@ namespace SuperHot {
 			// timer_enemy
 			// 
 			this->timer_enemy->Enabled = true;
-			this->timer_enemy->Interval = 20;
+			this->timer_enemy->Interval = rand()%10000+1000;
 			this->timer_enemy->Tick += gcnew System::EventHandler(this, &GameForm::timer_enemy_Tick);
 			// 
 			// GameForm
@@ -193,6 +194,7 @@ namespace SuperHot {
 		int score = 0;			//得分
 		int enemy_count = 0;	//敵人數量
 		List<bullet^>^ bulletList = gcnew List<bullet^>;
+		List<enemyBullet^>^ enemyBulletList = gcnew List<enemyBullet^>;
 
 	//按鍵:上下左右
 	private: System::Void GameForm_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
@@ -219,12 +221,12 @@ namespace SuperHot {
 			godown = false;
 		if (e->KeyCode == Keys::Space && amo > 0) {
 			amo--;
-			shoot(playerFacing, this);
+			shoot(this);
 		}
 		Amo_count->Text = "子彈數量:" + amo;
 	}
 
-	//角色移動的timer
+	//角色和敵人移動的timer
 	private: System::Void timer_movement_Tick(System::Object^  sender, System::EventArgs^  e) {
 		playerX = Player_image->Location.X;
 		playerY = Player_image->Location.Y;
@@ -235,10 +237,18 @@ namespace SuperHot {
 				each_bullet->dx = each_bullet->slowSpeedX;
 				each_bullet->dy = each_bullet->slowSpeedY;
 			}
+			for each (enemyBullet^ each_bullet in enemyBulletList) {
+				each_bullet->dx = each_bullet->slowSpeedX;
+				each_bullet->dy = each_bullet->slowSpeedY;
+			}
 		}
 		else {
 			enemySpeed = 5;
 			for each (bullet^ each_bullet in bulletList) {
+				each_bullet->dx = each_bullet->normalSpeedX;
+				each_bullet->dy = each_bullet->normalSpeedY;
+			}
+			for each (enemyBullet^ each_bullet in enemyBulletList) {
 				each_bullet->dx = each_bullet->normalSpeedX;
 				each_bullet->dy = each_bullet->normalSpeedY;
 			}
@@ -309,34 +319,8 @@ namespace SuperHot {
 			Player_image->BackgroundImage = imageList1->Images[7];	//左上方
 			playerFacing = 7;
 		}
-	}
 
-	//偵測滑鼠的位置
-	private: System::Void GameForm_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-		mouseX = e->Location.X;
-		mouseY = e->Location.Y;
-	}
-
-	//按下滑鼠左鍵，發射子彈
-	private: System::Void GameForm_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-		if (amo > 0) {
-			amo--;
-			shoot(playerFacing, this);
-		}
-		Amo_count->Text = "子彈數量: " + amo;
-	}
-	//發射子彈
-	private: System::Void shoot(int facing, Form^ form) {
-		bullet^ one_bullet = gcnew bullet;
-		one_bullet->bullet_left = playerX + 0.5*playerWidth;
-		one_bullet->bullet_top = playerY + 0.5*playerHeight;
-		one_bullet->directionX = mouseX;
-		one_bullet->directionY = mouseY;
-		one_bullet->make_bullet(form);
-		bulletList->Add(one_bullet);
-	}
-	//敵人移動
-	private: System::Void timer_enemy_Tick(System::Object^  sender, System::EventArgs^  e) {
+		//敵人行動
 		for each (Control^ x in this->Controls) {
 			//如果敵人和子彈接觸
 			for each (Control^ y in this->Controls) {
@@ -357,26 +341,75 @@ namespace SuperHot {
 					Score->Text = "得分: " + score;
 				}
 				//朝向角色移動
-				if (x->Left > playerX) {
+				if (x->Left > playerX && x->Location.X > 15) {
 					x->Location = Point(x->Left - enemySpeed, x->Top);
 				}
-				if (x->Left < playerX ) {
+				if (x->Left < playerX && x->Location.X < (1040 - x->Width)) {
 					x->Location = Point(x->Left + enemySpeed, x->Top);
 				}
-				if (x->Top > playerY) {
+				if (x->Top > playerY && x->Location.Y > 10) {
 					x->Location = Point(x->Left, x->Top - enemySpeed);
 				}
-				if (x->Top < playerY) {
+				if (x->Top < playerY && x->Location.Y < (650 - x->Height)) {
 					x->Location = Point(x->Left, x->Top + enemySpeed);
+				}
+			}
+			//敵人子彈打到玩家
+			if (x->Tag == "EnemyBullet") {
+				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {
+					delete x;	//子彈消失
+					score -= 20;
+					Score->Text = "得分: " + score;
 				}
 			}
 		}
 		//敵人隨機產生
-		if((rand() % 400) % 40 == 0) {
-			if(enemy_count < 5)
+		if ((rand() % 500) % 50 == 0) {
+			if (enemy_count < 2)
 				make_enemy();
 		}
-		
+	}
+
+	//偵測滑鼠的位置
+	private: System::Void GameForm_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		mouseX = e->Location.X;
+		mouseY = e->Location.Y;
+	}
+
+	//按下滑鼠左鍵，發射子彈
+	private: System::Void GameForm_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		if (amo > 0) {
+			amo--;
+			shoot(this);
+		}
+		Amo_count->Text = "子彈數量: " + amo;
+	}
+	//發射子彈
+	private: System::Void shoot(Form^ form) {
+		bullet^ one_bullet = gcnew bullet;
+		one_bullet->bullet_left = playerX + 0.5*playerWidth;
+		one_bullet->bullet_top = playerY + 0.5*playerHeight;
+		one_bullet->directionX = mouseX;
+		one_bullet->directionY = mouseY;
+		one_bullet->make_bullet(form);
+		bulletList->Add(one_bullet);
+	}
+	//敵人發射子彈
+	private: System::Void timer_enemy_Tick(System::Object^  sender, System::EventArgs^  e) {
+		for each (Control^ x in this->Controls) {
+			if (x->Tag == "Enemy" && rand()%10>5) {
+				enemyshoot(x, this);
+			}
+		}
+	}
+	private: System::Void enemyshoot(Control^ x, Form^ form) {
+		enemyBullet^ one_enemyShoot = gcnew enemyBullet;
+		one_enemyShoot->bullet_left = x->Left + 0.5*x->Width;
+		one_enemyShoot->bullet_top = x->Top + 0.5*x->Height;
+		one_enemyShoot->directionX = playerX + 0.5*playerWidth;
+		one_enemyShoot->directionY = playerY + 0.5*playerHeight;
+		one_enemyShoot->make_bullet(form);
+		enemyBulletList->Add(one_enemyShoot);
 	}
 	//敵人重生
 	private: System::Void make_enemy() {

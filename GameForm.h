@@ -7,6 +7,7 @@
 namespace SuperHot {
 
 	using namespace System;
+	using namespace System::IO;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
@@ -26,9 +27,31 @@ namespace SuperHot {
 			//
 			//TODO:  在此加入建構函式程式碼
 			//
+			loadHighest();
 			playerHeight = Player_image->Height;
 			playerWidth = Player_image->Width;
 			srand(time(NULL));
+		}
+
+		void loadHighest(void) {
+			String^ fileName = "record.txt";
+			try {
+				StreamReader^ din = File::OpenText(fileName);
+				String^ str;
+
+				while ((str = din->ReadLine()) != nullptr) {
+					highest = Int32::Parse(str);
+				}
+				din->Close();
+				delete str;
+			}
+			catch (Exception^ e) {
+				if (dynamic_cast<FileNotFoundException^>(e))
+					Console::WriteLine("file '{0}' not found", fileName);
+				else
+					Console::WriteLine("problem reading file '{0}'", fileName);
+			}
+			delete fileName;
 		}
 
 	protected:
@@ -45,10 +68,19 @@ namespace SuperHot {
 	private: System::Windows::Forms::PictureBox^  Player_image;
 	private: System::Windows::Forms::Label^  label_corner;
 	private: System::Windows::Forms::Timer^  timer_movement;
-	private: System::Windows::Forms::Label^  Score;
+	private: System::Windows::Forms::Label^  ScoreLabel;
 	private: System::Windows::Forms::Label^  Amo_count;
 	private: System::Windows::Forms::ImageList^  imageList1;
 	private: System::Windows::Forms::Timer^  timer_enemy;
+
+	private: System::Windows::Forms::Timer^  timer_blood;
+	private: System::Windows::Forms::PictureBox^  bloodImg;
+	private: System::Windows::Forms::ImageList^  imageList2;
+	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::Label^  label3;
+	private: System::Windows::Forms::Label^  label4;
+	private: System::Windows::Forms::Timer^  timer_checkDead;
+
 
 	private: System::ComponentModel::IContainer^  components;
 
@@ -70,16 +102,24 @@ namespace SuperHot {
 			this->Player_image = (gcnew System::Windows::Forms::PictureBox());
 			this->label_corner = (gcnew System::Windows::Forms::Label());
 			this->timer_movement = (gcnew System::Windows::Forms::Timer(this->components));
-			this->Score = (gcnew System::Windows::Forms::Label());
+			this->ScoreLabel = (gcnew System::Windows::Forms::Label());
 			this->Amo_count = (gcnew System::Windows::Forms::Label());
 			this->imageList1 = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->timer_enemy = (gcnew System::Windows::Forms::Timer(this->components));
+			this->timer_blood = (gcnew System::Windows::Forms::Timer(this->components));
+			this->bloodImg = (gcnew System::Windows::Forms::PictureBox());
+			this->imageList2 = (gcnew System::Windows::Forms::ImageList(this->components));
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->timer_checkDead = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->Player_image))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bloodImg))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// Player_image
 			// 
-			this->Player_image->BackColor = System::Drawing::Color::White;
+			this->Player_image->BackColor = System::Drawing::Color::Transparent;
 			this->Player_image->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"Player_image.BackgroundImage")));
 			this->Player_image->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Zoom;
 			this->Player_image->Location = System::Drawing::Point(1056, 544);
@@ -106,48 +146,128 @@ namespace SuperHot {
 			this->timer_movement->Interval = 20;
 			this->timer_movement->Tick += gcnew System::EventHandler(this, &GameForm::timer_movement_Tick);
 			// 
-			// Score
+			// ScoreLabel
 			// 
-			this->Score->AutoSize = true;
-			this->Score->BackColor = System::Drawing::Color::White;
-			this->Score->Font = (gcnew System::Drawing::Font(L"新細明體", 13.875F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->ScoreLabel->AutoSize = true;
+			this->ScoreLabel->BackColor = System::Drawing::Color::Transparent;
+			this->ScoreLabel->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->Score->Location = System::Drawing::Point(50, 39);
-			this->Score->Name = L"Score";
-			this->Score->Size = System::Drawing::Size(138, 37);
-			this->Score->TabIndex = 4;
-			this->Score->Text = L"得分:  0";
+			this->ScoreLabel->ForeColor = System::Drawing::SystemColors::ControlLightLight;
+			this->ScoreLabel->Location = System::Drawing::Point(58, 211);
+			this->ScoreLabel->Name = L"ScoreLabel";
+			this->ScoreLabel->Size = System::Drawing::Size(123, 40);
+			this->ScoreLabel->TabIndex = 4;
+			this->ScoreLabel->Text = L"得分:  0";
 			// 
 			// Amo_count
 			// 
 			this->Amo_count->AutoSize = true;
-			this->Amo_count->BackColor = System::Drawing::Color::White;
-			this->Amo_count->Font = (gcnew System::Drawing::Font(L"新細明體", 13.875F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->Amo_count->BackColor = System::Drawing::Color::Transparent;
+			this->Amo_count->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->Amo_count->Location = System::Drawing::Point(50, 108);
+			this->Amo_count->ForeColor = System::Drawing::SystemColors::ControlLightLight;
+			this->Amo_count->Location = System::Drawing::Point(58, 143);
 			this->Amo_count->Name = L"Amo_count";
-			this->Amo_count->Size = System::Drawing::Size(246, 37);
+			this->Amo_count->Size = System::Drawing::Size(206, 40);
 			this->Amo_count->TabIndex = 5;
-			this->Amo_count->Text = L"子彈數量:  100";
+			this->Amo_count->Text = L"子彈數量:  50";
 			// 
 			// imageList1
 			// 
 			this->imageList1->ImageStream = (cli::safe_cast<System::Windows::Forms::ImageListStreamer^>(resources->GetObject(L"imageList1.ImageStream")));
 			this->imageList1->TransparentColor = System::Drawing::Color::Transparent;
-			this->imageList1->Images->SetKeyName(0, L"up.png");
-			this->imageList1->Images->SetKeyName(1, L"up_right.png");
-			this->imageList1->Images->SetKeyName(2, L"right.png");
-			this->imageList1->Images->SetKeyName(3, L"down_right.png");
-			this->imageList1->Images->SetKeyName(4, L"down.png");
-			this->imageList1->Images->SetKeyName(5, L"down_left.png");
-			this->imageList1->Images->SetKeyName(6, L"left.png");
-			this->imageList1->Images->SetKeyName(7, L"up_left.png");
+			this->imageList1->Images->SetKeyName(0, L"protagonist00.jpg");
+			this->imageList1->Images->SetKeyName(1, L"protagonist01.jpg");
+			this->imageList1->Images->SetKeyName(2, L"protagonist02.jpg");
+			this->imageList1->Images->SetKeyName(3, L"protagonist03.jpg");
+			this->imageList1->Images->SetKeyName(4, L"protagonist04.jpg");
+			this->imageList1->Images->SetKeyName(5, L"protagonist05.jpg");
+			this->imageList1->Images->SetKeyName(6, L"protagonist06.jpg");
+			this->imageList1->Images->SetKeyName(7, L"protagonist07.jpg");
 			// 
 			// timer_enemy
 			// 
 			this->timer_enemy->Enabled = true;
-			this->timer_enemy->Interval = rand()%10000+1000;
+			this->timer_enemy->Interval = 800;
 			this->timer_enemy->Tick += gcnew System::EventHandler(this, &GameForm::timer_enemy_Tick);
+			// 
+			// timer_blood
+			// 
+			this->timer_blood->Interval = 1500;
+			this->timer_blood->Tick += gcnew System::EventHandler(this, &GameForm::timer_blood_Tick);
+			// 
+			// bloodImg
+			// 
+			this->bloodImg->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"bloodImg.BackgroundImage")));
+			this->bloodImg->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->bloodImg->Location = System::Drawing::Point(65, 43);
+			this->bloodImg->Name = L"bloodImg";
+			this->bloodImg->Size = System::Drawing::Size(280, 70);
+			this->bloodImg->TabIndex = 6;
+			this->bloodImg->TabStop = false;
+			// 
+			// imageList2
+			// 
+			this->imageList2->ImageStream = (cli::safe_cast<System::Windows::Forms::ImageListStreamer^>(resources->GetObject(L"imageList2.ImageStream")));
+			this->imageList2->TransparentColor = System::Drawing::Color::Transparent;
+			this->imageList2->Images->SetKeyName(0, L"health00.png");
+			this->imageList2->Images->SetKeyName(1, L"health01.png");
+			this->imageList2->Images->SetKeyName(2, L"health02.png");
+			this->imageList2->Images->SetKeyName(3, L"health03.png");
+			this->imageList2->Images->SetKeyName(4, L"health04.png");
+			this->imageList2->Images->SetKeyName(5, L"health05.png");
+			this->imageList2->Images->SetKeyName(6, L"health06.png");
+			this->imageList2->Images->SetKeyName(7, L"health07.png");
+			this->imageList2->Images->SetKeyName(8, L"health08.png");
+			this->imageList2->Images->SetKeyName(9, L"health09.png");
+			this->imageList2->Images->SetKeyName(10, L"health10.png");
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->BackColor = System::Drawing::Color::Transparent;
+			this->label2->Font = (gcnew System::Drawing::Font(L"Britannic Bold", 48, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label2->Location = System::Drawing::Point(766, 480);
+			this->label2->Margin = System::Windows::Forms::Padding(5, 0, 5, 0);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(674, 142);
+			this->label2->TabIndex = 10;
+			this->label2->Text = L"Game Over";
+			this->label2->Visible = false;
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->BackColor = System::Drawing::Color::Transparent;
+			this->label3->Font = (gcnew System::Drawing::Font(L"Imprint MT Shadow", 25.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label3->Location = System::Drawing::Point(882, 697);
+			this->label3->Margin = System::Windows::Forms::Padding(5, 0, 5, 0);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(223, 81);
+			this->label3->TabIndex = 11;
+			this->label3->Text = L"Score:";
+			this->label3->Visible = false;
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->BackColor = System::Drawing::Color::Transparent;
+			this->label4->Font = (gcnew System::Drawing::Font(L"Imprint MT Shadow", 25.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label4->Location = System::Drawing::Point(893, 841);
+			this->label4->Margin = System::Windows::Forms::Padding(5, 0, 5, 0);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(184, 81);
+			this->label4->TabIndex = 12;
+			this->label4->Text = L"Best:";
+			this->label4->Visible = false;
+			// 
+			// timer_checkDead
+			// 
+			this->timer_checkDead->Interval = 20;
+			this->timer_checkDead->Tick += gcnew System::EventHandler(this, &GameForm::timer_checkDead_Tick_1);
 			// 
 			// GameForm
 			// 
@@ -156,20 +276,28 @@ namespace SuperHot {
 			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 			this->ClientSize = System::Drawing::Size(2274, 1329);
 			this->Controls->Add(this->Player_image);
+			this->Controls->Add(this->label4);
+			this->Controls->Add(this->label3);
+			this->Controls->Add(this->label2);
+			this->Controls->Add(this->bloodImg);
 			this->Controls->Add(this->Amo_count);
-			this->Controls->Add(this->Score);
+			this->Controls->Add(this->ScoreLabel);
 			this->Controls->Add(this->label_corner);
 			this->DoubleBuffered = true;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"GameForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"熱浪 : Super Hot";
+			this->Text = L"Super Hot";
 			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &GameForm::GameForm_KeyDown);
 			this->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &GameForm::GameForm_KeyUp);
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &GameForm::GameForm_MouseDown);
 			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &GameForm::GameForm_MouseMove);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->Player_image))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bloodImg))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -180,6 +308,11 @@ namespace SuperHot {
 		Boolean goright;
 		Boolean goup;
 		Boolean godown;
+		int temp_score = 0;		//得分動畫用的變數
+		int highest = 0;		//最高分
+		bool hurt = true;		//是否會受到傷害
+		int bulletAdd = 10;		//倒數，子彈包出現
+		int blood = 10;			//血量
 		int playerSpeed = 13;	//水平移動速度
 		int playerSpeedSlow = 10;//斜向移動速度
 		int enemySpeed = 5;		//敵人移動速度
@@ -190,11 +323,13 @@ namespace SuperHot {
 		int playerY;			//玩家在y座標位置
 		int playerHeight;		//玩家圖像高度
 		int playerWidth;		//玩家圖像寬度
-		int amo = 100;			//子彈數
+		int amo = 50;			//子彈數
 		int score = 0;			//得分
 		int enemy_count = 0;	//敵人數量
 		List<bullet^>^ bulletList = gcnew List<bullet^>;
 		List<enemyBullet^>^ enemyBulletList = gcnew List<enemyBullet^>;
+		List<Control^>^ controlListB = gcnew List<Control^>;
+		List<Control^>^ controlListE = gcnew List<Control^>;
 
 	//按鍵:上下左右
 	private: System::Void GameForm_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
@@ -219,11 +354,11 @@ namespace SuperHot {
 			goup = false;
 		if (e->KeyCode == Keys::S)
 			godown = false;
-		if (e->KeyCode == Keys::Space && amo > 0) {
+		if (e->KeyCode == Keys::Space && amo > 0 && blood > 0) {
 			amo--;
 			shoot(this);
 		}
-		Amo_count->Text = "子彈數量:" + amo;
+		Amo_count->Text = "子彈數量: " + amo;
 	}
 
 	//角色和敵人移動的timer
@@ -320,6 +455,16 @@ namespace SuperHot {
 			playerFacing = 7;
 		}
 
+		//角色血量
+		//this->Controls["bloodImg"]->BackgroundImage = imageList2->Images[blood];
+		bloodImg->BackgroundImage = imageList2->Images[blood];
+		Player_image->BringToFront();
+
+		if (blood == 0) {
+			score += amo;
+			timer_checkDead->Enabled = true;
+		}
+
 		//敵人行動
 		for each (Control^ x in this->Controls) {
 			//如果敵人和子彈接觸
@@ -327,9 +472,17 @@ namespace SuperHot {
 				if (y->Tag == "Bullet" && x->Tag == "Enemy") {
 					if (x->Bounds.IntersectsWith(y->Bounds)) {
 						delete y;	//子彈消失
+						int temp = controlListB->IndexOf(y);
+						controlListB->Remove(y);
+						bulletList->Remove(bulletList[temp]);
 						delete x;	//敵人消失
+						bulletAdd--;	//倒數
+						if (bulletAdd == 0) {
+							bulletAdd = 10;
+							bulletshow();	//生成子彈包
+						}
 						score += 10;
-						Score->Text = "得分: " + score;
+						ScoreLabel->Text = "得分: " + score;
 						enemy_count--;
 					}
 				}
@@ -337,8 +490,13 @@ namespace SuperHot {
 			//敵人移動
 			if (x->Tag == "Enemy") {
 				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {	//撞上玩家
-					score -= 5;
-					Score->Text = "得分: " + score;
+					if (blood != 0 && hurt == true) {
+						blood--;
+						hurt = false;
+						timer_blood->Start();
+					}
+					if (blood == 0)
+						delete x;
 				}
 				//朝向角色移動
 				if (x->Left > playerX && x->Location.X > 15) {
@@ -358,16 +516,42 @@ namespace SuperHot {
 			if (x->Tag == "EnemyBullet") {
 				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {
 					delete x;	//子彈消失
-					score -= 20;
-					Score->Text = "得分: " + score;
+					int temp = controlListE->IndexOf(x);
+					controlListE->Remove(x);
+					enemyBulletList->Remove(enemyBulletList[temp]);
+					if (blood != 0 && hurt == true) {
+						blood--;
+						hurt = false;
+						timer_blood->Start();
+					}
+				}
+			}
+			//玩家遇到子彈包
+			if (x->Tag == "Bulletbag") {
+				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {
+					delete x;	//子彈包消失
+					controlListE->Remove(x);
+					amo += 10;
+					Amo_count->Text = "子彈數量: " + amo;
 				}
 			}
 		}
 		//敵人隨機產生
-		if ((rand() % 500) % 50 == 0) {
-			if (enemy_count < 2)
+		if ((rand() % 480) % 50 == 0) {
+			if (enemy_count < 5)
 				make_enemy();
 		}
+	}
+
+	//生成子彈包
+	public: System::Void bulletshow() {
+		System::Windows::Forms::PictureBox^ bulletbag = gcnew  System::Windows::Forms::PictureBox;
+		bulletbag->Tag = "Bulletbag";
+		bulletbag->Size = System::Drawing::Size(20, 20);
+		bulletbag->BackColor = System::Drawing::Color::Yellow;
+		bulletbag->Location = System::Drawing::Point(rand() % 1000, rand() % 600);
+		bulletbag->TabStop = false;
+		this->Controls->Add(bulletbag);
 	}
 
 	//偵測滑鼠的位置
@@ -393,15 +577,17 @@ namespace SuperHot {
 		one_bullet->directionY = mouseY;
 		one_bullet->make_bullet(form);
 		bulletList->Add(one_bullet);
+		controlListB->Add(one_bullet->Bullet);
 	}
 	//敵人發射子彈
 	private: System::Void timer_enemy_Tick(System::Object^  sender, System::EventArgs^  e) {
 		for each (Control^ x in this->Controls) {
-			if (x->Tag == "Enemy" && rand()%10>5) {
+			if (x->Tag == "Enemy" && rand()%50>25) {
 				enemyshoot(x, this);
 			}
 		}
 	}
+	//生成敵人子彈
 	private: System::Void enemyshoot(Control^ x, Form^ form) {
 		enemyBullet^ one_enemyShoot = gcnew enemyBullet;
 		one_enemyShoot->bullet_left = x->Left + 0.5*x->Width;
@@ -410,6 +596,7 @@ namespace SuperHot {
 		one_enemyShoot->directionY = playerY + 0.5*playerHeight;
 		one_enemyShoot->make_bullet(form);
 		enemyBulletList->Add(one_enemyShoot);
+		controlListE->Add(one_enemyShoot->Bullet);
 	}
 	//敵人重生
 	private: System::Void make_enemy() {
@@ -438,6 +625,58 @@ namespace SuperHot {
 			break;
 		}
 		this->Controls->Add(enemies);
+	}
+	//扣血的冷卻時間
+	private: System::Void timer_blood_Tick(System::Object^  sender, System::EventArgs^  e) {
+		hurt = true;
+		timer_blood->Stop();
+	}
+	//檢查死亡
+	private: System::Void timer_checkDead_Tick_1(System::Object^  sender, System::EventArgs^  e) {
+		if (blood == 0) {
+			for each(Control^ x in this->Controls) {
+				if (x->Tag == "Enemy" || x->Tag == "EnemyBullet" || x->Tag == "Bulletbag")
+					delete x;
+			}
+			delete ScoreLabel;
+			delete Amo_count;
+			delete bloodImg;
+			delete Player_image;
+			delete bulletList;
+			delete enemyBulletList;
+			delete controlListB;
+			delete controlListE;
+			label2->Visible = true;
+			label3->Visible = true;
+			label4->Visible = true;
+			timer_movement->Stop();
+			timer_enemy->Stop();
+
+			//跑得分動畫
+			if (temp_score < score) {
+				temp_score += 5;
+				if (temp_score > score) {
+					temp_score -= (temp_score - score);
+				}
+				label3->Text = "Score: " + temp_score;
+
+				//改變最高分
+				if (score > highest) {
+					label4->Text = "Best: " + temp_score;
+					String^ fileName = "record.txt";
+					FileStream^ fs = gcnew FileStream(fileName, FileMode::Open);
+					StreamWriter^ sw = gcnew StreamWriter(fs);
+
+					sw->WriteLine(score);
+					sw->Close();
+					delete fs;
+					delete fileName;
+				}
+				else {
+					label4->Text = "Best: " + highest;
+				}
+			}
+		}
 	}
 };
 }

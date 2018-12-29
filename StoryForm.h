@@ -68,7 +68,7 @@ namespace SuperHot {
 	private: System::Windows::Forms::Label^  ScoreLabel;
 	private: System::Windows::Forms::PictureBox^  picture_superHot;
 	private: System::Windows::Forms::Button^  button_menu;
-
+	private: System::Windows::Forms::ProgressBar^  progressBar_boss;
 
 	private: System::ComponentModel::IContainer^  components;
 
@@ -114,6 +114,7 @@ namespace SuperHot {
 			this->ScoreLabel = (gcnew System::Windows::Forms::Label());
 			this->picture_superHot = (gcnew System::Windows::Forms::PictureBox());
 			this->button_menu = (gcnew System::Windows::Forms::Button());
+			this->progressBar_boss = (gcnew System::Windows::Forms::ProgressBar());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_chap1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_chap2))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_chap3))->BeginInit();
@@ -128,14 +129,15 @@ namespace SuperHot {
 			// 
 			this->label_corner->AutoSize = true;
 			this->label_corner->BackColor = System::Drawing::Color::Transparent;
-			this->label_corner->Font = (gcnew System::Drawing::Font(L"Bahnschrift", 10.125F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
+			this->label_corner->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(136)));
 			this->label_corner->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
-			this->label_corner->Location = System::Drawing::Point(2108, 1287);
+			this->label_corner->Location = System::Drawing::Point(2000, 1287);
 			this->label_corner->Name = L"label_corner";
-			this->label_corner->Size = System::Drawing::Size(154, 33);
+			this->label_corner->Size = System::Drawing::Size(273, 40);
 			this->label_corner->TabIndex = 4;
-			this->label_corner->Text = L"@SuperHot";
+			this->label_corner->Text = L"點我開關作弊模式";
+			this->label_corner->Click += gcnew System::EventHandler(this, &StoryForm::label_corner_Click);
 			// 
 			// picture_chap1
 			// 
@@ -382,7 +384,7 @@ namespace SuperHot {
 			this->Amo_count->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
 			this->Amo_count->ForeColor = System::Drawing::SystemColors::ControlLightLight;
-			this->Amo_count->Location = System::Drawing::Point(45, 131);
+			this->Amo_count->Location = System::Drawing::Point(46, 128);
 			this->Amo_count->Name = L"Amo_count";
 			this->Amo_count->Size = System::Drawing::Size(179, 40);
 			this->Amo_count->TabIndex = 21;
@@ -396,7 +398,7 @@ namespace SuperHot {
 			this->ScoreLabel->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
 			this->ScoreLabel->ForeColor = System::Drawing::SystemColors::ControlLightLight;
-			this->ScoreLabel->Location = System::Drawing::Point(45, 196);
+			this->ScoreLabel->Location = System::Drawing::Point(46, 204);
 			this->ScoreLabel->Name = L"ScoreLabel";
 			this->ScoreLabel->Size = System::Drawing::Size(235, 80);
 			this->ScoreLabel->TabIndex = 22;
@@ -433,6 +435,19 @@ namespace SuperHot {
 			this->button_menu->Visible = false;
 			this->button_menu->Click += gcnew System::EventHandler(this, &StoryForm::button_menu_Click);
 			// 
+			// progressBar_boss
+			// 
+			this->progressBar_boss->BackColor = System::Drawing::Color::White;
+			this->progressBar_boss->ForeColor = System::Drawing::Color::Crimson;
+			this->progressBar_boss->Location = System::Drawing::Point(690, 40);
+			this->progressBar_boss->Maximum = 45;
+			this->progressBar_boss->Name = L"progressBar_boss";
+			this->progressBar_boss->Size = System::Drawing::Size(911, 70);
+			this->progressBar_boss->Step = 1;
+			this->progressBar_boss->TabIndex = 25;
+			this->progressBar_boss->Value = 45;
+			this->progressBar_boss->Visible = false;
+			// 
 			// StoryForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(13, 24);
@@ -443,6 +458,7 @@ namespace SuperHot {
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 			this->ClientSize = System::Drawing::Size(2274, 1329);
+			this->Controls->Add(this->progressBar_boss);
 			this->Controls->Add(this->button_menu);
 			this->Controls->Add(this->Player_image);
 			this->Controls->Add(this->ScoreLabel);
@@ -490,7 +506,7 @@ namespace SuperHot {
 		Boolean godown;
 		bool hurt = true;		//是否會受到傷害
 		int bulletAdd = 10;		//倒數，子彈包出現
-		int blood = 2;			//血量
+		int blood = 10;			//血量
 		int playerSpeed = 13;	//水平移動速度
 		int playerSpeedSlow = 10;//斜向移動速度
 		int enemySpeed = 5;		//敵人移動速度
@@ -502,7 +518,7 @@ namespace SuperHot {
 		int playerHeight;		//玩家圖像高度
 		int playerWidth;		//玩家圖像寬度
 		int amo = 0;			//子彈數
-		int score = 28;			//得分
+		int score = 0;			//得分
 		int enemy_count = 0;	//敵人數量
 		List<bullet^>^ bulletList = gcnew List<bullet^>;
 		List<enemyBullet^>^ enemyBulletList = gcnew List<enemyBullet^>;
@@ -511,8 +527,14 @@ namespace SuperHot {
 
 		int chapter = 1;	//選擇章節
 		int kill_goal = 30; //目標擊殺人數
+		int boss_health = 45;	//boss的血量
+		int boss_x = 450;	//boss前往的位置
+		int boss_y = 20;
+		Boolean cheat = false;	//作弊模式開關
 		array<String^>^ storyLines = gcnew array<String^>(10);	//存放各章劇情
 		int pageNumber;		//紀錄每一章節現在在第幾頁
+		static array<int>^ bossBullet_X_array = gcnew array<int>{0, 10, 10, 10, 0, -10, -10, -10};	//boss子彈的角度
+		static array<int>^ bossBullet_Y_array = gcnew array<int>{-10, -10, 0, 10, 10, 10, 0, -10};
 
 #pragma endregion
 	//按鍵:上下左右
@@ -529,9 +551,8 @@ namespace SuperHot {
 	}
 	//放開按鍵:上下左右，空白鍵射擊
 	private: System::Void GameForm_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
-		if (e->KeyCode == Keys::A) {
+		if (e->KeyCode == Keys::A)
 			goleft = false;
-		}
 		if (e->KeyCode == Keys::D)
 			goright = false;
 		if (e->KeyCode == Keys::W)
@@ -539,7 +560,8 @@ namespace SuperHot {
 		if (e->KeyCode == Keys::S)
 			godown = false;
 		if (e->KeyCode == Keys::Space && amo > 0 && blood > 0) {
-			amo--;
+			if(cheat == false)
+				amo--;
 			shoot(this);
 		}
 		Amo_count->Text = "子彈數量: " + amo;
@@ -644,13 +666,21 @@ namespace SuperHot {
 		Player_image->BringToFront();
 
 		//遊戲結束
-		if (blood == 0)
+		if (blood == 0) {
 			timer_checkDead->Enabled = true;
+			progressBar_boss->Visible = false;
+		}
 		if ((chapter == 1 && score >= 30) || (chapter == 2 && score >= 25) || (chapter == 3 && score >= 30)
 			|| (chapter == 4 && score >= 35)) {
 			timer_checkDead->Enabled = true;
 			picture_superHot->Enabled = true;
 			picture_superHot->Visible = true;	//播放過關gif
+		}
+		else if (chapter == 5 && boss_health <= 0) {
+			timer_checkDead->Enabled = true;
+			picture_superHot->Enabled = true;
+			picture_superHot->Visible = true;	//播放過關gif
+			progressBar_boss->Visible = false;
 		}
 
 		//敵人行動
@@ -665,20 +695,30 @@ namespace SuperHot {
 						bulletList->Remove(bulletList[temp]);
 						delete x;	//敵人消失
 						bulletAdd--;	//倒數
-						if (bulletAdd == 0) {
-							bulletAdd = 10;
-							bulletshow();	//生成子彈包
-						}
 						score += 1;
 						ScoreLabel->Text = "擊殺數: " + score + "\n(目標擊殺" + kill_goal + "人)";
 						enemy_count--;
+					}
+				}
+				//子彈打到boss
+				if (y->Tag == "Bullet" && x->Tag == "Boss") {
+					if (x->Bounds.IntersectsWith(y->Bounds)){
+						delete y;	//子彈消失
+						int temp = controlListB->IndexOf(y);
+						controlListB->Remove(y);
+						bulletList->Remove(bulletList[temp]);
+						bulletAdd--;	//倒數
+						score += 1;
+						boss_health -= 1;
+						if(progressBar_boss->Value > 0)
+							progressBar_boss->Value--;
 					}
 				}
 			}
 			//敵人移動
 			if (x->Tag == "Enemy") {
 				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {	//撞上玩家
-					if (blood != 0 && hurt == true) {
+					if (blood != 0 && hurt == true && cheat == false) {
 						blood--;
 						hurt = false;
 						timer_blood->Start();
@@ -707,7 +747,7 @@ namespace SuperHot {
 					int temp = controlListE->IndexOf(x);
 					controlListE->Remove(x);
 					enemyBulletList->Remove(enemyBulletList[temp]);
-					if (blood != 0 && hurt == true) {
+					if (blood != 0 && hurt == true && cheat == false) {
 						blood--;
 						hurt = false;
 						timer_blood->Start();
@@ -723,6 +763,39 @@ namespace SuperHot {
 					Amo_count->Text = "子彈數量: " + amo;
 				}
 			}
+			//boss移動
+			if (x->Tag == "Boss") {
+				x->Visible = true;
+				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {	//撞上玩家
+					if (blood != 0 && hurt == true && cheat == false) {
+						blood--;
+						hurt = false;
+						timer_blood->Start();
+					}
+				}
+				//生成新的移動目標點，以產生隨機移動的效果
+				if ((x->Left >= boss_x - 5 && x->Left <= boss_x + 5) || (x->Top >= boss_y - 5 && x->Top <= boss_y + 5)) {
+					boss_x = rand() % (1050 - x->Width);
+					boss_y = rand() % (650 - x->Height);
+				}
+				if (x->Left > boss_x && x->Location.X > 10) {
+					x->Location = Point(x->Left - enemySpeed - 2, x->Top);
+				}
+				if (x->Left < boss_x && x->Location.X < (1050 - x->Width)) {
+					x->Location = Point(x->Left + enemySpeed + 2, x->Top);
+				}
+				if (x->Top > boss_y && x->Location.Y > 10) {
+					x->Location = Point(x->Left, x->Top - enemySpeed - 2);
+				}
+				if (x->Top < boss_y && x->Location.Y < (650 - x->Height)) {
+					x->Location = Point(x->Left, x->Top + enemySpeed + 2);
+				}
+			}
+		}
+		//生成子彈包
+		if (bulletAdd == 0) {
+			bulletAdd = 10;
+			bulletshow();	
 		}
 		//敵人隨機產生
 		if (chapter == 1) {		//第一章敵人
@@ -737,15 +810,15 @@ namespace SuperHot {
 					make_enemy();
 			}
 		}
-		else if (chapter == 3) {	//第三章敵人
+		else if (chapter == 3 || chapter == 4) {	//第三四章敵人
 			if ((rand() % 450) % 45 == 0) {
 				if (enemy_count < 6)
 					make_enemy();
 			}
 		}
-		else if (chapter == 4) {	//第四章敵人
-			if ((rand() % 460) % 45 == 0) {
-				if (enemy_count < 9)
+		else if (chapter == 5) {	//第五章敵人
+			if ((rand() % 800) % 200 == 0) {
+				if (enemy_count < 3)
 					make_enemy();
 			}
 		}
@@ -771,7 +844,8 @@ namespace SuperHot {
 	//按下滑鼠左鍵，發射子彈
 	private: System::Void GameForm_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 		if (amo > 0) {
-			amo--;
+			if(cheat == false)
+				amo--;
 			shoot(this);
 		}
 		Amo_count->Text = "子彈數量: " + amo;
@@ -790,13 +864,18 @@ namespace SuperHot {
 	//敵人發射子彈
 	private: System::Void timer_enemy_Tick(System::Object^  sender, System::EventArgs^  e) {
 		for each (Control^ x in this->Controls) {
-			if(chapter == 2 || chapter == 3){
-				if (x->Tag == "Enemy" && rand() % 50>25)
+			if(chapter == 2 || chapter == 3 || chapter == 5){
+				if (x->Tag == "Enemy" && rand() % 50 > 25)
 					enemyshoot(x, this);
 			}
 			else if (chapter == 4) {
-				if (x->Tag == "Enemy" && rand() % 60>25)
+				if (x->Tag == "Enemy" && rand() % 60 > 20)
 					enemyshoot(x, this);
+			}
+			if (x->Tag == "Boss") {
+				//boss發射子彈
+				if ((rand() % 80) > 50)
+					boss_shoot(x, this);
 			}
 		}
 	}
@@ -810,6 +889,19 @@ namespace SuperHot {
 		one_enemyShoot->make_bullet(form);
 		enemyBulletList->Add(one_enemyShoot);
 		controlListE->Add(one_enemyShoot->Bullet);
+	}
+	//boss子彈--360度散彈攻擊
+	private: System::Void boss_shoot(Control^ x, Form^ form) {
+		for (int i = 0; i < 8; i++) {
+			enemyBullet^ one_enemyShoot = gcnew enemyBullet;
+			one_enemyShoot->bullet_left = x->Left + 0.5*x->Width;
+			one_enemyShoot->bullet_top = x->Top + 0.5*x->Height;
+			one_enemyShoot->directionX = x->Left + 0.5*x->Width + bossBullet_X_array[i];
+			one_enemyShoot->directionY = x->Top + 0.5*x->Height + bossBullet_Y_array[i];
+			one_enemyShoot->make_bullet(form);
+			enemyBulletList->Add(one_enemyShoot);
+			controlListE->Add(one_enemyShoot->Bullet);
+		}
 	}
 	//敵人重生
 	private: System::Void make_enemy() {
@@ -848,7 +940,7 @@ namespace SuperHot {
 	private: System::Void timer_checkDead_Tick_1(System::Object^  sender, System::EventArgs^  e) {
 		//隱藏物件
 		for each(Control^ x in this->Controls) {
-			if (x->Tag == "Enemy" || x->Tag == "EnemyBullet" || x->Tag == "Bulletbag")
+			if (x->Tag == "Enemy" || x->Tag == "EnemyBullet" || x->Tag == "Bulletbag" || x->Tag == "Boss")
 				delete x;
 		}
 		ScoreLabel->Visible = false;
@@ -976,7 +1068,7 @@ namespace SuperHot {
 				label_title->Visible = true;
 				button_nextPage->Visible = false;
 				label_story->Visible = false;
-				amo = 50;
+				amo = 60;
 			}
 			break;
 		case 6:
@@ -1028,12 +1120,16 @@ namespace SuperHot {
 		Player_image->Visible = true;
 		bloodImg->Visible = true;
 		Amo_count->Visible = true;
-		ScoreLabel->Visible = true;
+		if(chapter != 5)
+			ScoreLabel->Visible = true;
+		if(chapter == 5)
+			progressBar_boss->Visible = true;
 
 		timer_enemy->Enabled = true;
 		timer_movement->Enabled = true;
 		Amo_count->Text = "子彈數量: " + amo;
 		ScoreLabel->Text = "擊殺數: " + score + "\n(目標擊殺" + kill_goal + "人)";
+		
 	}
 	//點擊第二章
 	private: System::Void pictureBox2_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -1134,6 +1230,17 @@ namespace SuperHot {
 		storyLines[1] = "\n王以震耳欲聾的吼叫作為回應。";
 		storyLines[2] = "\n\n時間所剩不多，子彈即將用罄，體力幾乎見底。";
 		storyLines[3] = "\n\n但這一切阻擋不了他眼中熊熊的烈火。";
+
+		//生成boss
+		ScoreLabel->Text = "王的血量: " + boss_health;
+		System::Windows::Forms::PictureBox^ boss = gcnew  System::Windows::Forms::PictureBox;
+		boss->Tag = "Boss";
+		boss->Size = System::Drawing::Size(100, 100);
+		boss->BackColor = System::Drawing::Color::Red;
+		boss->TabStop = false;
+		boss->Location = System::Drawing::Point(450, 20);
+		this->Controls->Add(boss);
+		boss->Visible = false;
 	}
 	//結局按鈕
 	private: System::Void label_end_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -1204,7 +1311,18 @@ namespace SuperHot {
 		label_end->Visible = true;
 		score = 0;
 		blood = 10;
+		boss_health = 45;
+		progressBar_boss->Value = 45;
+		progressBar_boss->Visible = false;
 		this->Player_image->Location = System::Drawing::Point(500, 250);
+	}
+	//作弊模式開關
+	private: System::Void label_corner_Click(System::Object^  sender, System::EventArgs^  e) {
+		cheat = !(cheat);
+		if(cheat == true)
+			label_corner->ForeColor = System::Drawing::Color::Red;
+		else
+			label_corner->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
 	}
 };
 }

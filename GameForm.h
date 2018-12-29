@@ -66,7 +66,7 @@ namespace SuperHot {
 			}
 		}
 	private: System::Windows::Forms::PictureBox^  Player_image;
-	private: System::Windows::Forms::Label^  label_corner;
+
 	private: System::Windows::Forms::Timer^  timer_movement;
 	private: System::Windows::Forms::Label^  ScoreLabel;
 	private: System::Windows::Forms::Label^  Amo_count;
@@ -80,6 +80,7 @@ namespace SuperHot {
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::Timer^  timer_checkDead;
+	private: System::Windows::Forms::Label^  label_corner;
 
 
 	private: System::ComponentModel::IContainer^  components;
@@ -100,7 +101,6 @@ namespace SuperHot {
 			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(GameForm::typeid));
 			this->Player_image = (gcnew System::Windows::Forms::PictureBox());
-			this->label_corner = (gcnew System::Windows::Forms::Label());
 			this->timer_movement = (gcnew System::Windows::Forms::Timer(this->components));
 			this->ScoreLabel = (gcnew System::Windows::Forms::Label());
 			this->Amo_count = (gcnew System::Windows::Forms::Label());
@@ -113,6 +113,7 @@ namespace SuperHot {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->timer_checkDead = (gcnew System::Windows::Forms::Timer(this->components));
+			this->label_corner = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->Player_image))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bloodImg))->BeginInit();
 			this->SuspendLayout();
@@ -128,18 +129,6 @@ namespace SuperHot {
 			this->Player_image->TabIndex = 0;
 			this->Player_image->TabStop = false;
 			// 
-			// label_corner
-			// 
-			this->label_corner->AutoSize = true;
-			this->label_corner->Font = (gcnew System::Drawing::Font(L"Bahnschrift", 10.125F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label_corner->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
-			this->label_corner->Location = System::Drawing::Point(2114, 1289);
-			this->label_corner->Name = L"label_corner";
-			this->label_corner->Size = System::Drawing::Size(154, 33);
-			this->label_corner->TabIndex = 3;
-			this->label_corner->Text = L"@SuperHot";
-			// 
 			// timer_movement
 			// 
 			this->timer_movement->Enabled = true;
@@ -153,7 +142,7 @@ namespace SuperHot {
 			this->ScoreLabel->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
 			this->ScoreLabel->ForeColor = System::Drawing::SystemColors::ControlLightLight;
-			this->ScoreLabel->Location = System::Drawing::Point(58, 211);
+			this->ScoreLabel->Location = System::Drawing::Point(672, 53);
 			this->ScoreLabel->Name = L"ScoreLabel";
 			this->ScoreLabel->Size = System::Drawing::Size(123, 40);
 			this->ScoreLabel->TabIndex = 4;
@@ -166,7 +155,7 @@ namespace SuperHot {
 			this->Amo_count->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
 			this->Amo_count->ForeColor = System::Drawing::SystemColors::ControlLightLight;
-			this->Amo_count->Location = System::Drawing::Point(58, 143);
+			this->Amo_count->Location = System::Drawing::Point(409, 53);
 			this->Amo_count->Name = L"Amo_count";
 			this->Amo_count->Size = System::Drawing::Size(206, 40);
 			this->Amo_count->TabIndex = 5;
@@ -200,7 +189,7 @@ namespace SuperHot {
 			// 
 			this->bloodImg->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"bloodImg.BackgroundImage")));
 			this->bloodImg->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
-			this->bloodImg->Location = System::Drawing::Point(65, 43);
+			this->bloodImg->Location = System::Drawing::Point(65, 33);
 			this->bloodImg->Name = L"bloodImg";
 			this->bloodImg->Size = System::Drawing::Size(280, 70);
 			this->bloodImg->TabIndex = 6;
@@ -269,6 +258,20 @@ namespace SuperHot {
 			this->timer_checkDead->Interval = 20;
 			this->timer_checkDead->Tick += gcnew System::EventHandler(this, &GameForm::timer_checkDead_Tick_1);
 			// 
+			// label_corner
+			// 
+			this->label_corner->AutoSize = true;
+			this->label_corner->BackColor = System::Drawing::Color::Transparent;
+			this->label_corner->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(136)));
+			this->label_corner->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
+			this->label_corner->Location = System::Drawing::Point(1989, 1280);
+			this->label_corner->Name = L"label_corner";
+			this->label_corner->Size = System::Drawing::Size(273, 40);
+			this->label_corner->TabIndex = 13;
+			this->label_corner->Text = L"點我開關作弊模式";
+			this->label_corner->Click += gcnew System::EventHandler(this, &GameForm::label_corner_Click);
+			// 
 			// GameForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(13, 24);
@@ -279,6 +282,7 @@ namespace SuperHot {
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 			this->ClientSize = System::Drawing::Size(2274, 1329);
+			this->Controls->Add(this->label_corner);
 			this->Controls->Add(this->Player_image);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->label3);
@@ -286,7 +290,6 @@ namespace SuperHot {
 			this->Controls->Add(this->bloodImg);
 			this->Controls->Add(this->Amo_count);
 			this->Controls->Add(this->ScoreLabel);
-			this->Controls->Add(this->label_corner);
 			this->DoubleBuffered = true;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"GameForm";
@@ -326,6 +329,7 @@ namespace SuperHot {
 		int amo = 50;			//子彈數
 		int score = 0;			//得分
 		int enemy_count = 0;	//敵人數量
+		Boolean cheat = false;
 		List<bullet^>^ bulletList = gcnew List<bullet^>;
 		List<enemyBullet^>^ enemyBulletList = gcnew List<enemyBullet^>;
 		List<Control^>^ controlListB = gcnew List<Control^>;
@@ -355,7 +359,8 @@ namespace SuperHot {
 		if (e->KeyCode == Keys::S)
 			godown = false;
 		if (e->KeyCode == Keys::Space && amo > 0 && blood > 0) {
-			amo--;
+			if(cheat == false)
+				amo--;
 			shoot(this);
 		}
 		Amo_count->Text = "子彈數量: " + amo;
@@ -490,7 +495,7 @@ namespace SuperHot {
 			//敵人移動
 			if (x->Tag == "Enemy") {
 				if (x->Bounds.IntersectsWith(Player_image->Bounds)) {	//撞上玩家
-					if (blood != 0 && hurt == true) {
+					if (blood != 0 && hurt == true && cheat == false) {
 						blood--;
 						hurt = false;
 						timer_blood->Start();
@@ -519,7 +524,7 @@ namespace SuperHot {
 					int temp = controlListE->IndexOf(x);
 					controlListE->Remove(x);
 					enemyBulletList->Remove(enemyBulletList[temp]);
-					if (blood != 0 && hurt == true) {
+					if (blood != 0 && hurt == true && cheat == false) {
 						blood--;
 						hurt = false;
 						timer_blood->Start();
@@ -563,7 +568,8 @@ namespace SuperHot {
 	//按下滑鼠左鍵，發射子彈
 	private: System::Void GameForm_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 		if (amo > 0) {
-			amo--;
+			if(cheat == false)
+				amo--;
 			shoot(this);
 		}
 		Amo_count->Text = "子彈數量: " + amo;
@@ -677,6 +683,14 @@ namespace SuperHot {
 				}
 			}
 		}
+	}
+	 //作弊模式開關
+	private: System::Void label_corner_Click(System::Object^  sender, System::EventArgs^  e) {
+		cheat = !(cheat);
+		if (cheat == true)
+			label_corner->ForeColor = System::Drawing::Color::Red;
+		else
+			label_corner->ForeColor = System::Drawing::SystemColors::ButtonHighlight;
 	}
 };
 }
